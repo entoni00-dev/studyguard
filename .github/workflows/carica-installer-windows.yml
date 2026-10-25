@@ -1,0 +1,22 @@
+# Workflow TEMPORANEO: ricompone l'installer Windows dalle 5 parti, ne verifica lo SHA-256
+# e lo allega alla release v0.43.0. Il ramo viene cancellato subito dopo.
+name: Carica installer Windows
+on:
+  push:
+    branches: [upload-windows-installer]
+permissions:
+  contents: write
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ricomponi e verifica
+        run: |
+          cat parts/StudyGuard-Setup-Windows.exe.part0* > StudyGuard-Setup-Windows.exe
+          ls -l StudyGuard-Setup-Windows.exe
+          echo "8e108f03c70c8e005866d71ec2c24b950e4da66141071a0c1212b82cc130c143  StudyGuard-Setup-Windows.exe" | sha256sum -c -
+      - name: Allega alla release v0.43.0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload v0.43.0 StudyGuard-Setup-Windows.exe --clobber -R "$GITHUB_REPOSITORY"
