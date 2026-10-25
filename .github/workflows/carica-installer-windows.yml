@@ -8,6 +8,8 @@ permissions:
   contents: write
 jobs:
   upload:
+    # parte solo con il commit finale, quando tutte le parti sono state caricate
+    if: contains(github.event.head_commit.message, '[carica]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,7 +17,7 @@ jobs:
         run: |
           cat parts/StudyGuard-Setup-Windows.exe.part0* > StudyGuard-Setup-Windows.exe
           ls -l StudyGuard-Setup-Windows.exe
-          echo "8e108f03c70c8e005866d71ec2c24b950e4da66141071a0c1212b82cc130c143  StudyGuard-Setup-Windows.exe" | sha256sum -c -
+          echo "1db3f3bde092c08672d159c3d8b2d17dfb05419006f17bb927cbb00fbd30f7f0  StudyGuard-Setup-Windows.exe" | sha256sum -c -
       - name: Allega alla release v0.43.0
         env:
           GH_TOKEN: ${{ github.token }}
